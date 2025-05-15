@@ -29,9 +29,10 @@ public class UrlService {
     public UrlResponseTO shortenUrl(String urlReceived) {
         validateUrl(urlReceived);
         urlReceived = addHttps(urlReceived);
+        urlReceived = EncryptService.encrypt(urlReceived);
         Url existingUrl = urlRepository.findByUrlOriginal(urlReceived);
         if (existingUrl != null) {
-            return new UrlResponseTO(existingUrl.getUrlOriginal(),existingUrl.getUrlShort());
+            return new UrlResponseTO(EncryptService.decrypt(existingUrl.getUrlOriginal()),EncryptService.decrypt(existingUrl.getUrlShort()));
         }
 
         String urlGenerated = generateShortUrl(urlReceived);
@@ -50,7 +51,7 @@ public class UrlService {
         }
         UrlView urlView = new UrlView(url.getUrlShort(),new Date().toString());
         urlViewRepository.save(urlView);
-        return url.getUrlOriginal();
+        return EncryptService.decrypt(url.getUrlOriginal());
     }
 
     public List<UrlRankingTO> ranking() {

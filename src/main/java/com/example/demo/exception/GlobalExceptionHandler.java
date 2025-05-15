@@ -26,6 +26,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handlerHashException(HashException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
+    @ExceptionHandler({EncryptException.class})
+    public ResponseEntity<String> handlerEncryptException(HashException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
 
     @ExceptionHandler({UrlNotFoundException.class})
     public ResponseEntity<String> handlerUrlNotFoundException(UrlNotFoundException e) {

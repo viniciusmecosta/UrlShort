@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.service.EncryptService;
 import jakarta.persistence.*;
 import lombok.*;
 
