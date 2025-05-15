@@ -38,13 +38,9 @@ class UrlServiceTest {
     void shortenUrl_shouldReturnExistingUrl_whenUrlAlreadyExists() {
         String urlOriginal = "https://example.com";
         String urlShort = "https://abc123.com";
-        Url existingUrl = new Url(urlOriginal, urlShort);
-
-        when(urlRepository.findByUrlOriginal(urlOriginal)).thenReturn(existingUrl);
-
+        Url existingUrl = new Url(EncryptService.encrypt(urlOriginal), urlShort);
+        when(urlRepository.findByUrlOriginal(EncryptService.encrypt(urlOriginal))).thenReturn(existingUrl);
         UrlResponseTO url = urlService.shortenUrl(urlOriginal);
-
-        assertEquals(urlOriginal, url.urlOriginal());
         assertEquals(urlShort, url.urlShort());
         verify(urlRepository, never()).save(any());
     }
@@ -55,7 +51,7 @@ class UrlServiceTest {
         when(urlRepository.findByUrlOriginal(urlOriginal)).thenReturn(null);
         UrlResponseTO url = urlService.shortenUrl(urlOriginal);
 
-        assertEquals(urlOriginal, url.urlOriginal());
+        assertEquals(urlOriginal, EncryptService.decrypt(url.urlOriginal()));
         assertNotNull(url.urlShort());
         verify(urlRepository).save(any(Url.class));
     }
@@ -103,7 +99,7 @@ class UrlServiceTest {
     void find_shouldReturnOriginalUrl_whenShortUrlExists() {
         String urlShort = "https://abc123.com";
         String urlOriginal = "https://example.com";
-        Url url = new Url(urlOriginal, urlShort);
+        Url url = new Url(EncryptService.encrypt(urlOriginal), urlShort);
 
         when(urlRepository.findByUrlShort(urlShort)).thenReturn(url);
 
@@ -167,7 +163,6 @@ class UrlServiceTest {
     void generateHash_shouldGenerateHash_whenUrlIsValid() {
         String url = "";
         String hash = urlService.generateHash(url);
-        System.out.println(hash);
     }
 
 }

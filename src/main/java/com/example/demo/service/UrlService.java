@@ -32,7 +32,7 @@ public class UrlService {
         urlReceived = EncryptService.encrypt(urlReceived);
         Url existingUrl = urlRepository.findByUrlOriginal(urlReceived);
         if (existingUrl != null) {
-            return new UrlResponseTO(EncryptService.decrypt(existingUrl.getUrlOriginal()),EncryptService.decrypt(existingUrl.getUrlShort()));
+            return new UrlResponseTO(EncryptService.decrypt(existingUrl.getUrlOriginal()),existingUrl.getUrlShort());
         }
 
         String urlGenerated = generateShortUrl(urlReceived);

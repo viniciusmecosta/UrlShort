@@ -21,7 +21,7 @@ public class EncryptService {
             byte[] encrypted = cipher.doFinal(message.getBytes());
             return Base64.getEncoder().encodeToString(encrypted);
         } catch (Exception e) {
-            throw new EncryptException("Erro ao descriptografar");
+            throw new EncryptException("Erro ao criptografar");
         }
     }
 
@@ -33,7 +33,7 @@ public class EncryptService {
             byte[] decrypted = cipher.doFinal(decoded);
             return new String(decrypted);
         } catch (Exception e) {
-            throw new EncryptException("Erro ao descriptografar");
+            throw new EncryptException("Erro ao descriptografar2");
         }
     }
 }
