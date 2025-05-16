@@ -16,7 +16,6 @@ import java.util.*;
 @Service
 public class UrlService {
     private final String https = "https://";
-    private final String http = "http://";
     private final UrlRepository urlRepository;
     private final UrlViewRepository urlViewRepository;
 
@@ -38,8 +37,7 @@ public class UrlService {
         String urlGenerated = generateShortUrl(urlReceived);
         Url url = new Url(urlReceived,urlGenerated);
         urlRepository.save(url);
-        UrlResponseTO urlResponseTO = new UrlResponseTO(url.getUrlOriginal(),url.getUrlShort());
-        return urlResponseTO;
+        return new UrlResponseTO(url.getUrlOriginal(),url.getUrlShort());
     }
 
     public String find(String urlShort) {
@@ -90,6 +88,7 @@ public class UrlService {
     }
 
     public String addHttps(final String url) {
+        String http = "http://";
         if (!url.startsWith(http) && !url.startsWith(https)) {
             return https + url;
         }

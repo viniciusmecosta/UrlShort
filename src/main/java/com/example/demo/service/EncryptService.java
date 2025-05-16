@@ -33,7 +33,7 @@ public class EncryptService {
             byte[] decrypted = cipher.doFinal(decoded);
             return new String(decrypted);
         } catch (Exception e) {
-            throw new EncryptException("Erro ao descriptografar2");
+            throw new EncryptException("Erro ao descriptografar");
         }
     }
 }

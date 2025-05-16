@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.Url;
 import com.example.demo.exception.NoUrlViewException;
 import com.example.demo.exception.UrlInvalidException;
 import com.example.demo.exception.UrlNotFoundException;
