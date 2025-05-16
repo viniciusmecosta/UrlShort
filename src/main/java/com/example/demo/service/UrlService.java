@@ -37,7 +37,7 @@ public class UrlService {
         String urlGenerated = generateShortUrl(urlReceived);
         Url url = new Url(urlReceived,urlGenerated);
         urlRepository.save(url);
-        return new UrlResponseTO(url.getUrlOriginal(),url.getUrlShort());
+        return new UrlResponseTO(EncryptService.decrypt(url.getUrlOriginal()),url.getUrlShort());
     }
 
     public String find(String urlShort) {
@@ -47,7 +47,7 @@ public class UrlService {
         if (url == null) {
             throw new UrlNotFoundException("Url not found");
         }
-        UrlView urlView = new UrlView(url.getUrlShort(),new Date().toString());
+        UrlView urlView = new UrlView(url.getUrlShort(),new Date().toString(),EncryptService.decrypt(url.getUrlOriginal()));
         urlViewRepository.save(urlView);
         return EncryptService.decrypt(url.getUrlOriginal());
     }

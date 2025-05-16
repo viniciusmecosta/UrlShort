@@ -15,10 +15,14 @@ public class UrlView {
 
     private String url;
 
+    private String urlOriginal;
+
     private String date;
 
-    public UrlView(String url, String date) {
-        this.url = url;
-        this.date = date;
+
+    public UrlView(String urlShort, String string, String urlOriginal) {
+        this.url = urlShort;
+        this.urlOriginal = urlOriginal;
+        this.date = string;
     }
 }
