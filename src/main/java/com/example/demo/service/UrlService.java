@@ -28,16 +28,16 @@ public class UrlService {
     public UrlResponseTO shortenUrl(String urlReceived) {
         validateUrl(urlReceived);
         urlReceived = addHttps(urlReceived);
-        urlReceived = EncryptService.encrypt(urlReceived);
+        urlReceived = EncryptService.encryptAES(urlReceived);
         Url existingUrl = urlRepository.findByUrlOriginal(urlReceived);
         if (existingUrl != null) {
-            return new UrlResponseTO(EncryptService.decrypt(existingUrl.getUrlOriginal()),existingUrl.getUrlShort());
+            return new UrlResponseTO(EncryptService.decryptAES(existingUrl.getUrlOriginal()),existingUrl.getUrlShort());
         }
 
         String urlGenerated = generateShortUrl(urlReceived);
         Url url = new Url(urlReceived,urlGenerated);
         urlRepository.save(url);
-        return new UrlResponseTO(EncryptService.decrypt(url.getUrlOriginal()),url.getUrlShort());
+        return new UrlResponseTO(EncryptService.decryptAES(url.getUrlOriginal()),url.getUrlShort());
     }
 
     public String find(String urlShort) {
@@ -49,7 +49,7 @@ public class UrlService {
         }
         UrlView urlView = new UrlView(url.getUrlShort(),url.getUrlOrignal(),new Date().toString());
         urlViewRepository.save(urlView);
-        return EncryptService.decrypt(url.getUrlOriginal());
+        return EncryptService.decryptAES(url.getUrlOriginal());
     }
 
     public List<UrlRankingTO> ranking() {
@@ -61,7 +61,7 @@ public class UrlService {
 
         List<UrlRankingTO> urlRankingDescriptografados = new ArrayList<>();
         for (UrlRankingTO urlRankingTO : urlRankingTOs) {
-            String urlOriginalDecrypted = EncryptService.decrypt(urlRankingTO.urlOriginal());
+            String urlOriginalDecrypted = EncryptService.decryptAES(urlRankingTO.urlOriginal());
             UrlRankingTO newUrlRankingTO = new UrlRankingTO(urlRankingTO.urlShort(), urlOriginalDecrypted, urlRankingTO.count());
             urlRankingDescriptografados.add(newUrlRankingTO);
         }
