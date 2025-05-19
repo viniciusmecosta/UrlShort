@@ -19,15 +19,13 @@ public class EncryptService {
     private static final String key = dotenv.get("SECRET_KEY");
 
     private static SecretKey getSecretKey() {
-        SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(), "DESede");
-        return secretKeySpec;
+        return new SecretKeySpec(key.getBytes(), "DESede");
     }
 
     private static SecretKey getSecretKeyAES() throws NoSuchAlgorithmException {
         MessageDigest sha = MessageDigest.getInstance("SHA-256");
         byte[] key = sha.digest(keyAES.getBytes(StandardCharsets.UTF_8));
-        SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
-        return secretKeySpec;
+        return new SecretKeySpec(key, "AES");
         }
 
     public static String encrypt(String message) {
