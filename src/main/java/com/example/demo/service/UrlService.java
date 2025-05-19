@@ -47,7 +47,7 @@ public class UrlService {
         if (url == null) {
             throw new UrlNotFoundException("Url not found");
         }
-        UrlView urlView = new UrlView(url.getUrlShort(),new Date().toString(),EncryptService.decrypt(url.getUrlOriginal()));
+        UrlView urlView = new UrlView(url.getUrlShort(),url.getUrlOrignal(),new Date().toString());
         urlViewRepository.save(urlView);
         return EncryptService.decrypt(url.getUrlOriginal());
     }
@@ -55,10 +55,17 @@ public class UrlService {
     public List<UrlRankingTO> ranking() {
         List<UrlRankingTO> urlRankingTOs = urlViewRepository.findRankingUrlView();
 
-		if (urlRankingTOs.isEmpty()) {
+        if (urlRankingTOs.isEmpty()) {
             throw new NoUrlViewException("No url fetched");
         }
-        return urlRankingTOs;
+
+        List<UrlRankingTO> urlRankingDescriptografados = new ArrayList<>();
+        for (UrlRankingTO urlRankingTO : urlRankingTOs) {
+            String urlOriginalDecrypted = EncryptService.decrypt(urlRankingTO.urlOriginal());
+            UrlRankingTO newUrlRankingTO = new UrlRankingTO(urlRankingTO.urlShort(), urlOriginalDecrypted, urlRankingTO.count());
+            urlRankingDescriptografados.add(newUrlRankingTO);
+        }
+        return urlRankingDescriptografados;
     }
 
     public String generateShortUrl(final String originalUrl) {

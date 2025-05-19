@@ -18,7 +18,7 @@ class UrlViewRepositoryTest {
 
     @Test
     void save_shouldPersistUrlView() {
-        UrlView urlView = new UrlView("https://abc123.com", "2025-01-20");
+        UrlView urlView = new UrlView("https://abc123.com","https://urllong.com","2025-01-20" );
         UrlView savedUrlView = urlViewRepository.save(urlView);
 
         assertNotNull(savedUrlView);
@@ -28,10 +28,10 @@ class UrlViewRepositoryTest {
 
     @Test
     void find_allReturnsListUrlRankingTO(){
-        UrlView urlView = new UrlView("url1", "2025");
-        UrlView urlView1 = new UrlView("url2", "2024");
-        UrlView urlView2 = new UrlView("url3", "2023");
-        UrlView urlView3 = new UrlView("url4", "2022");
+        UrlView urlView = new UrlView("url1","url1longa", "2025");
+        UrlView urlView1 = new UrlView("url2","url2longa", "2024");
+        UrlView urlView2 = new UrlView("url3","url3longa", "2023");
+        UrlView urlView3 = new UrlView("url4","url4longa", "2022");
         urlViewRepository.save(urlView);
         urlViewRepository.save(urlView1);
         urlViewRepository.save(urlView2);
@@ -41,7 +41,7 @@ class UrlViewRepositoryTest {
         assertNotNull(urlRankingTO);
         System.out.println(urlRankingTO);
         assertEquals(4, urlRankingTO.size());
-        assertEquals("url1", urlRankingTO.get(0).url());
-        assertEquals("url4", urlRankingTO.get(3).url());
+        assertEquals("url1", urlRankingTO.get(0).urlShort());
+        assertEquals("url4", urlRankingTO.get(3).urlShort());
     }
 }

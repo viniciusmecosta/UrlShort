@@ -20,9 +20,9 @@ public class UrlView {
     private String date;
 
 
-    public UrlView(String urlShort, String string, String urlOriginal) {
+    public UrlView(String urlShort, String urlOriginal, String date) {
         this.url = urlShort;
         this.urlOriginal = urlOriginal;
-        this.date = string;
+        this.date = date;
     }
 }

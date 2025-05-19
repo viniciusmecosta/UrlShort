@@ -22,4 +22,8 @@ public class Url {
         this.urlOriginal = urlOriginal;
         this.urlShort = urlShort;
     }
+
+    public String getUrlOrignal() {
+        return urlOriginal;
+    }
 }

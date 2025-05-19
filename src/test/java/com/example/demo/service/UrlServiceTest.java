@@ -51,7 +51,7 @@ class UrlServiceTest {
         when(urlRepository.findByUrlOriginal(urlOriginal)).thenReturn(null);
         UrlResponseTO url = urlService.shortenUrl(urlOriginal);
 
-        assertEquals(urlOriginal, EncryptService.decrypt(url.urlOriginal()));
+        assertEquals(urlOriginal,url.urlOriginal());
         assertNotNull(url.urlShort());
         verify(urlRepository).save(any(Url.class));
     }
@@ -68,11 +68,14 @@ class UrlServiceTest {
 
     @Test
     void ranking_shouldReturnTop10Urls() {
+        String url1encrypted = EncryptService.encrypt("https://example1.com");
+        String url2encrypted = EncryptService.encrypt("https://example2.com");
+        String url3encrypted = EncryptService.encrypt("https://example3.com");
         List<UrlRankingTO> urlRankingTOS = List.of(
-                new UrlRankingTO("url1", 5L),
-                new UrlRankingTO("url1", 6L),
-                new UrlRankingTO("url2", 9L),
-                new UrlRankingTO("url3", 1L)
+                new UrlRankingTO("url1",url1encrypted, 5L),
+                new UrlRankingTO("url1", url1encrypted,6L),
+                new UrlRankingTO("url2",url2encrypted, 9L),
+                new UrlRankingTO("url3", url3encrypted,1L)
         );
 
         when(urlViewRepository.findRankingUrlView()).thenReturn(urlRankingTOS);
@@ -80,7 +83,7 @@ class UrlServiceTest {
         List<UrlRankingTO> ranking = urlService.ranking();
 
         assertEquals(4, ranking.size());
-        assertEquals("url3", ranking.get(3).url());
+        assertEquals("url3", ranking.get(3).urlShort());
         assertEquals(5L, ranking.get(0).count() );
 
     }
