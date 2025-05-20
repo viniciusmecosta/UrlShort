@@ -18,24 +18,25 @@ public class UrlService {
     private final String https = "https://";
     private final UrlRepository urlRepository;
     private final UrlViewRepository urlViewRepository;
+    private final UrlRepositoryEncrypt urlRepositoryEncrypt;
 
     @Autowired
-    public UrlService(UrlRepository urlRepository, UrlViewRepository urlViewRepository) {
+    public UrlService(UrlRepository urlRepository, UrlViewRepository urlViewRepository, UrlRepositoryEncrypt urlRepositoryEncrypt) {
         this.urlRepository = urlRepository;
         this.urlViewRepository = urlViewRepository;
+        this.urlRepositoryEncrypt = urlRepositoryEncrypt;
     }
 
     public UrlResponseTO shortenUrl(String urlReceived) {
         validateUrl(urlReceived);
         urlReceived = addHttps(urlReceived);
-        urlReceived = EncryptService.encryptAES(urlReceived);
-        Url existingUrl = urlRepository.findByUrlOriginal(urlReceived);
+        Url existingUrl = urlRepositoryEncrypt.findByDecryptedOriginalUrl(urlReceived);
         if (existingUrl != null) {
             return new UrlResponseTO(EncryptService.decryptAES(existingUrl.getUrlOriginal()),existingUrl.getUrlShort());
         }
-
+        String urlEcrypted = EncryptService.encryptAES(urlReceived);
         String urlGenerated = generateShortUrl(urlReceived);
-        Url url = new Url(urlReceived,urlGenerated);
+        Url url = new Url(urlEcrypted,urlGenerated);
         urlRepository.save(url);
         return new UrlResponseTO(EncryptService.decryptAES(url.getUrlOriginal()),url.getUrlShort());
     }
