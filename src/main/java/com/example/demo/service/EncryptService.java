@@ -35,7 +35,7 @@ public class EncryptService {
             byte[] encrypted = cipher.doFinal(message.getBytes());
             return Base64.getEncoder().encodeToString(encrypted);
         } catch (Exception e) {
-            throw new EncryptException("Erro ao criptografar");
+            throw new EncryptException("Error to Encrypt");
         }
     }
 
@@ -47,7 +47,7 @@ public class EncryptService {
             byte[] decrypted = cipher.doFinal(decoded);
             return new String(decrypted);
         } catch (Exception e) {
-            throw new EncryptException("Erro ao descriptografar");
+            throw new EncryptException("Error to Decrypt");
         }
     }
 
@@ -70,7 +70,7 @@ public class EncryptService {
 
             return Base64.getEncoder().encodeToString(combined);
         } catch (Exception e) {
-            throw new EncryptException("Erro ao criptografar com AES");
+            throw new EncryptException("Erro to Encrypt with AES");
         }
     }
 
@@ -83,7 +83,7 @@ public class EncryptService {
 
             byte[] iv = new byte[16];
             if (combined.length < iv.length) {
-                throw new EncryptException("Mensagem criptografada inválida: muito curta para conter IV.");
+                throw new EncryptException("Invalid message encrypted");
             }
             System.arraycopy(combined, 0, iv, 0, iv.length);
             IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
@@ -96,7 +96,7 @@ public class EncryptService {
 
             return new String(decryptedBytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
-            throw new EncryptException("Erro ao descriptografar com AES" );
+            throw new EncryptException("Error to decrypt with AES" );
         }
     }
 }

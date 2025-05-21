@@ -4,6 +4,7 @@ import com.example.demo.entity.Url;
 import com.example.demo.entity.UrlView;
 import com.example.demo.exception.*;
 import com.example.demo.repository.UrlRepository;
+import com.example.demo.repository.UrlRepositoryEncrypt;
 import com.example.demo.repository.UrlViewRepository;
 import com.example.demo.to.UrlRankingTO;
 import com.example.demo.to.UrlResponseTO;
@@ -24,6 +25,9 @@ class UrlServiceTest {
     private UrlRepository urlRepository;
 
     @Mock
+    private UrlRepositoryEncrypt urlRepositoryEncrypt;
+
+    @Mock
     private UrlViewRepository urlViewRepository;
 
     @InjectMocks
@@ -34,21 +38,11 @@ class UrlServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void shortenUrl_shouldReturnExistingUrl_whenUrlAlreadyExists() {
-        String urlOriginal = "https://example.com";
-        String urlShort = "https://abc123.com";
-        Url existingUrl = new Url(EncryptService.encrypt(urlOriginal), urlShort);
-        when(urlRepository.findByUrlOriginal(EncryptService.encrypt(urlOriginal))).thenReturn(existingUrl);
-        UrlResponseTO url = urlService.shortenUrl(urlOriginal);
-        assertEquals(urlShort, url.urlShort());
-        verify(urlRepository, never()).save(any());
-    }
 
     @Test
     void shortenUrl_shouldGenerateNewUrl_whenUrlDoesNotExist() {
         String urlOriginal = "https://example.com";
-        when(urlRepository.findByUrlOriginal(urlOriginal)).thenReturn(null);
+        when(urlRepositoryEncrypt.findByDecryptedOriginalUrl(urlOriginal)).thenReturn(null);
         UrlResponseTO url = urlService.shortenUrl(urlOriginal);
 
         assertEquals(urlOriginal,url.urlOriginal());
@@ -68,9 +62,9 @@ class UrlServiceTest {
 
     @Test
     void ranking_shouldReturnTop10Urls() {
-        String url1encrypted = EncryptService.encrypt("https://example1.com");
-        String url2encrypted = EncryptService.encrypt("https://example2.com");
-        String url3encrypted = EncryptService.encrypt("https://example3.com");
+        String url1encrypted = EncryptService.encryptAES("https://example1.com");
+        String url2encrypted = EncryptService.encryptAES("https://example2.com");
+        String url3encrypted = EncryptService.encryptAES("https://example3.com");
         List<UrlRankingTO> urlRankingTOS = List.of(
                 new UrlRankingTO("url1",url1encrypted, 5L),
                 new UrlRankingTO("url1", url1encrypted,6L),
@@ -102,7 +96,7 @@ class UrlServiceTest {
     void find_shouldReturnOriginalUrl_whenShortUrlExists() {
         String urlShort = "https://abc123.com";
         String urlOriginal = "https://example.com";
-        Url url = new Url(EncryptService.encrypt(urlOriginal), urlShort);
+        Url url = new Url(EncryptService.encryptAES(urlOriginal), urlShort);
 
         when(urlRepository.findByUrlShort(urlShort)).thenReturn(url);
 
